@@ -366,6 +366,37 @@
             margin-top: 15px;
         }
         
+        .hidden-number {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .reveal-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .reveal-btn:hover {
+            background: #e55555;
+        }
+        
+        .masked {
+            letter-spacing: 3px;
+            color: #888;
+        }
+        
+        .manager-info {
+            display: flex;
+            align-items: center;
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -418,7 +449,11 @@
                 <h2 class="section-title"><i class="fas fa-phone"></i> Contact</h2>
                 <div class="info-item">
                     <i class="fas fa-phone-volume"></i>
-                    <strong>Landline:</strong> (04) 399 6890
+                    <strong>Landline:</strong> 
+                    <span class="hidden-number">
+                        <span id="landline" class="masked">•••• ••• ••••</span>
+                        <button class="reveal-btn" onclick="revealNumber('landline', '(04) 399 6890')">Show</button>
+                    </span>
                 </div>
                 <div class="info-item">
                     <i class="fas fa-headset"></i>
@@ -426,11 +461,18 @@
                 </div>
                 <div class="info-item">
                     <i class="fas fa-user-tie"></i>
-                    <strong>Manager:</strong> Mr. Zaid
+                    <strong>Manager:</strong> 
+                    <span class="manager-info">
+                        <span id="managerName" class="masked">•••• ••••••</span>
+                    </span>
                 </div>
                 <div class="info-item">
                     <i class="fas fa-mobile-alt"></i>
-                    <strong>Manager Phone:</strong> 971 56 740 5572
+                    <strong>Manager Phone:</strong> 
+                    <span class="hidden-number">
+                        <span id="managerPhone" class="masked">••• ••• ••••</span>
+                        <button class="reveal-btn" onclick="revealManagerDetails()">Show</button>
+                    </span>
                 </div>
                 <div class="info-item">
                     <i class="fas fa-mobile-alt"></i>
@@ -705,8 +747,52 @@
             }
         }
         
+        // Reveal hidden number
+        function revealNumber(elementId, number) {
+            const element = document.getElementById(elementId);
+            const button = element.nextElementSibling;
+            
+            if (element.classList.contains('masked')) {
+                element.textContent = number;
+                element.classList.remove('masked');
+                button.textContent = 'Hide';
+            } else {
+                element.textContent = '•••• ••• ••••';
+                element.classList.add('masked');
+                button.textContent = 'Show';
+            }
+        }
+        
+        // Reveal manager details (both name and phone)
+        function revealManagerDetails() {
+            const nameElement = document.getElementById('managerName');
+            const phoneElement = document.getElementById('managerPhone');
+            const button = phoneElement.nextElementSibling;
+            
+            if (nameElement.classList.contains('masked')) {
+                nameElement.textContent = 'Mr. Zaid';
+                nameElement.classList.remove('masked');
+                phoneElement.textContent = '971 56 740 5572';
+                phoneElement.classList.remove('masked');
+                button.textContent = 'Hide';
+                showToast('Manager details revealed');
+            } else {
+                nameElement.textContent = '•••• ••••••';
+                nameElement.classList.add('masked');
+                phoneElement.textContent = '••• ••• ••••';
+                phoneElement.classList.add('masked');
+                button.textContent = 'Show';
+            }
+        }
+        
         // Contact functions
         function callManager() {
+            // Check if manager phone is revealed
+            const phoneElement = document.getElementById('managerPhone');
+            if (phoneElement.classList.contains('masked')) {
+                showToast('Please reveal manager phone number first');
+                return;
+            }
             window.open('tel:+971567405572', '_self');
             showToast('Calling Mr. Zaid...');
         }
@@ -741,6 +827,26 @@
                 toast.classList.remove('show');
             }, 3000);
         }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Check if 'L' key is pressed (case insensitive) for landline
+            if (event.key === 'l' || event.key === 'L') {
+                const landlineElement = document.getElementById('landline');
+                if (landlineElement.classList.contains('masked')) {
+                    revealNumber('landline', '(04) 399 6890');
+                    showToast('Landline number revealed');
+                }
+            }
+            
+            // Check if 'M' key is pressed (case insensitive) for manager details
+            if (event.key === 'm' || event.key === 'M') {
+                const nameElement = document.getElementById('managerName');
+                if (nameElement.classList.contains('masked')) {
+                    revealManagerDetails();
+                }
+            }
+        });
     </script>
 </body>
 </html>
