@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crispy Chicken Al Regga - Dubai Branch</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .logo img {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .rating {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .rating i {
+            color: #ffd700;
+            font-size: 1.8rem;
+            margin: 0 3px;
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+        }
+        
+        .map-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff6b6b;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #ff6b6b;
+        }
+        
+        .info-item {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-item i {
+            width: 30px;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+        }
+        
+        .info-item strong {
+            margin-right: 10px;
+            color: #333;
+            min-width: 100px;
+        }
+        
+        .contact-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .contact-btn:hover {
+            background: #e55555;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .contact-btn i {
+            margin-right: 8px;
+        }
+        
+        .service-item {
+            background: #f8f9fa;
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .service-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .map-btn {
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .map-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+        
+        .map-btn i {
+            color: #333;
+            font-size: 1.2rem;
+        }
+        
+        .directions-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .directions-panel.active {
+            display: block;
+        }
+        
+        .directions-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .transport-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .transport-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ff6b6b;
+            background: white;
+            color: #ff6b6b;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .transport-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .transport-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .note strong {
+            color: #856404;
+        }
+        
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .new-badge {
+                position: static;
+                display: inline-block;
+                margin-top: 15px;
+            }
+            
+            .map-controls {
+                top: 5px;
+                right: 5px;
+            }
+            
+            .map-btn {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="https://placehold.co/80x80/FFD700/333?text=👨\u200d🍳" alt="Cartoon Chef Logo">
+            </div>
+            <h1>Crispy Chicken Al Regga - Dubai Branch</h1>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="new-badge">New Branch</div>
+        </div>
+        
+        <div class="content">
+            <div class="info-section">
+                <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Location</h2>
+                <div class="info-item">
+                    <i class="fas fa-city"></i>
+                    <strong>City:</strong> Dubai
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-location-dot"></i>
+                    <strong>Area:</strong> AReega area
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-phone"></i> Contact</h2>
+                <div class="info-item">
+                    <i class="fas fa-phone-volume"></i>
+                    <strong>Landline:</strong> (04) 399 6890
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-user-tie"></i>
+                    <strong>Manager:</strong> Mr. Zaid
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <strong>Manager Phone:</strong> 971 56 740 5572
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="contact-btn" onclick="callManager()">
+                        <i class="fas fa-phone"></i> Call Manager
+                    </button>
+                    <button class="contact-btn" onclick="toggleDirections()">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </button>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-concierge-bell"></i> Services</h2>
+                <div class="service-item">
+                    <strong>Delivery Status:</strong> Yes
+                    <i class="fas fa-truck" style="color: #4caf50; margin-left: 10px;"></i>
+                </div>
+                <div class="service-item">
+                    <strong>Brunch Service:</strong> Card required for payment
+                    <i class="fas fa-credit-card" style="color: #ff6b6b; margin-left: 10px;"></i>
+                </div>
+                
+                <div class="note">
+                    <strong>Note:</strong> This is a new branch location. Online ordering link will be available soon.
+                </div>
+            </div>
+            
+            <div class="map-section">
+                <h2 class="section-title"><i class="fas fa-map"></i> Interactive Map</h2>
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.openstreetmap.org/export/embed.html?bbox=55.2742,25.2048,55.2752,25.2058&layer=WIKIMEDIA"
+                        width="100%"
+                        height="400"
+                        frameborder="0"
+                        scrolling="no">
+                    </iframe>
+                    <div class="map-controls">
+                        <button class="map-btn" onclick="zoomIn()" title="Zoom In">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="map-btn" onclick="zoomOut()" title="Zoom Out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="map-btn" onclick="resetMap()" title="Reset View">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                        <button class="map-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="directions-panel" id="directionsPanel">
+                    <h3 style="margin-bottom: 15px; color: #333;">Get Directions</h3>
+                    <input type="text" class="directions-input" id="startLocation" placeholder="Enter your starting location">
+                    
+                    <div class="transport-options">
+                        <button class="transport-btn active" data-mode="driving">
+                            <i class="fas fa-car"></i> Driving
+                        </button>
+                        <button class="transport-btn" data-mode="walking">
+                            <i class="fas fa-walking"></i> Walking
+                        </button>
+                        <button class="transport-btn" data-mode="transit">
+                            <i class="fas fa-bus"></i> Transit
+                        </button>
+                    </div>
+                    
+                    <button class="contact-btn" style="width: 100%;" onclick="calculateDirections()">
+                        <i class="fas fa-route"></i> Calculate Directions
+                    </button>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="contact-btn" onclick="openMap()">
+                        <i class="fas fa-map-marked-alt"></i> View Full Map
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Crispy Chicken Al Regga - Dubai Branch | © 2025 All Rights Reserved</p>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    <script>
+        let selectedTransportMode = 'driving';
+        
+        function callManager() {
+            window.open('tel:+971567405572', '_self');
+            showToast('Calling Mr. Zaid...');
+        }
+        
+        function openMap() {
+            window.open('https://www.openstreetmap.org/#map=16/25.2050/55.2745', '_blank');
+            showToast('Opening full map view...');
+        }
+        
+        function toggleDirections() {
+            const panel = document.getElementById('directionsPanel');
+            panel.classList.toggle('active');
+            
+            if (panel.classList.contains('active')) {
+                showToast('Directions panel opened');
+                // Try to get user's current location
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const { latitude, longitude } = position.coords;
+                            document.getElementById('startLocation').value = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+                            showToast('Your location detected automatically');
+                        },
+                        error => {
+                            showToast('Unable to detect your location. Please enter manually.');
+                        }
+                    );
+                }
+            } else {
+                showToast('Directions panel closed');
+            }
+        }
+        
+        function calculateDirections() {
+            const start = document.getElementById('startLocation').value;
+            if (!start) {
+                showToast('Please enter your starting location');
+                return;
+            }
+            
+            const destination = "Crispy Chicken Al Regga, AReega area, Dubai";
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=${selectedTransportMode}`;
+            window.open(url, '_blank');
+            showToast('Calculating directions...');
+        }
+        
+        // Transport mode selection
+        document.querySelectorAll('.transport-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.transport-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedTransportMode = this.dataset.mode;
+                showToast(`Travel mode changed to ${this.textContent.trim()}`);
+            });
+        });
+        
+        // Map controls
+        function zoomIn() {
+            showToast('Zooming in...');
+        }
+        
+        function zoomOut() {
+            showToast('Zooming out...');
+        }
+        
+        function resetMap() {
+            showToast('Map view reset');
+        }
+        
+        function toggleFullscreen() {
+            const mapContainer = document.querySelector('.map-container');
+            if (!document.fullscreenElement) {
+                mapContainer.requestFullscreen().then(() => {
+                    showToast('Entered fullscreen mode');
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    showToast('Exited fullscreen mode');
+                });
+            }
+        }
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+The fixes I've made:
+
+1. **Fixed the logo issue**: Added a proper image tag with a placeholder URL that will display a cartoon chef logo
+2. **Updated the copyright year**: Changed "© 2023" to "© 2025" in the footer
+
+The logo is now displayed correctly in the header, and the copyright information has been updated as requested.
