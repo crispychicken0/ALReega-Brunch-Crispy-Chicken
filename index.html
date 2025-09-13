@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crispy Chicken Al Regga - Dubai Branch</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -53,11 +54,6 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             z-index: 10;
-        }
-        
-        .logo img {
-            width: 60px;
-            height: 60px;
         }
         
         .header h1 {
@@ -188,10 +184,10 @@
             position: relative;
         }
         
-        .map-container iframe {
+        #map {
             width: 100%;
             height: 100%;
-            border: none;
+            border-radius: 10px;
         }
         
         .map-controls {
@@ -321,29 +317,71 @@
             to { transform: translateX(0); }
         }
         
+        .delivery-zones {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .zone-header {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .zone-content {
+            background: #f8f9fa;
+            padding: 15px;
+            display: none;
+        }
+        
+        .zone-content.active {
+            display: block;
+        }
+        
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .zone-item:last-child {
+            border-bottom: none;
+        }
+        
+        .zone-time {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
             .content {
                 flex-direction: column;
             }
             
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .new-badge {
-                position: static;
-                display: inline-block;
-                margin-top: 15px;
-            }
-            
-            .map-controls {
-                top: 5px;
-                right: 5px;
-            }
-            
-            .map-btn {
-                width: 35px;
-                height: 35px;
+            .contact-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -354,7 +392,7 @@
             <div class="logo">
                 <img src="https://placehold.co/80x80/FFD700/333?text=👨\u200d🍳" alt="Cartoon Chef Logo">
             </div>
-            <h1>Crispy Chicken Al Regga - Dubai Branch</h1>
+            <h1>Crispy Chicken Al Regga</h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -383,6 +421,10 @@
                     <strong>Landline:</strong> (04) 399 6890
                 </div>
                 <div class="info-item">
+                    <i class="fas fa-headset"></i>
+                    <strong>Call Center:</strong> 600 527488
+                </div>
+                <div class="info-item">
                     <i class="fas fa-user-tie"></i>
                     <strong>Manager:</strong> Mr. Zaid
                 </div>
@@ -390,13 +432,31 @@
                     <i class="fas fa-mobile-alt"></i>
                     <strong>Manager Phone:</strong> 971 56 740 5572
                 </div>
+                <div class="info-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <strong>Mobile:</strong> 050 188 2206
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <strong>Email:</strong> kenawe@crispychicken.rest
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-globe"></i>
+                    <strong>Website:</strong> <a href="https://crispychicken-uae.com" target="_blank" style="color: #ff6b6b; text-decoration: none;">crispychicken-uae.com</a>
+                </div>
                 
-                <div style="margin-top: 20px;">
+                <div class="contact-grid">
                     <button class="contact-btn" onclick="callManager()">
                         <i class="fas fa-phone"></i> Call Manager
                     </button>
-                    <button class="contact-btn" onclick="toggleDirections()">
-                        <i class="fas fa-directions"></i> Get Directions
+                    <button class="contact-btn" onclick="callCenter()">
+                        <i class="fas fa-headset"></i> Call Center
+                    </button>
+                    <button class="contact-btn" onclick="callMobile()">
+                        <i class="fas fa-mobile-alt"></i> Call Mobile
+                    </button>
+                    <button class="contact-btn" onclick="sendEmail()">
+                        <i class="fas fa-envelope"></i> Send Email
                     </button>
                 </div>
                 
@@ -413,18 +473,37 @@
                 <div class="note">
                     <strong>Note:</strong> This is a new branch location. Online ordering link will be available soon.
                 </div>
+                
+                <div class="delivery-zones">
+                    <div class="zone-header" onclick="toggleZones()">
+                        <span>Delivery Zones <i class="fas fa-chevron-down"></i></span>
+                        <span>Up to 60 min</span>
+                    </div>
+                    <div class="zone-content" id="zoneContent">
+                        <div class="zone-item">
+                            <span>Zone 1: Al Rigga, Naif, Gold Souk</span>
+                            <span class="zone-time">0-15 min</span>
+                        </div>
+                        <div class="zone-item">
+                            <span>Zone 2: Airport, Bur Dubai, Karama</span>
+                            <span class="zone-time">15-30 min</span>
+                        </div>
+                        <div class="zone-item">
+                            <span>Zone 3: Marina, JBR, Mirdif</span>
+                            <span class="zone-time">30-45 min</span>
+                        </div>
+                        <div class="zone-item">
+                            <span>Zone 4: Jebel Ali, Sharjah, Silicon Oasis</span>
+                            <span class="zone-time">45-60 min</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="map-section">
                 <h2 class="section-title"><i class="fas fa-map"></i> Interactive Map</h2>
                 <div class="map-container">
-                    <iframe 
-                        src="https://www.openstreetmap.org/export/embed.html?bbox=55.2742,25.2048,55.2752,25.2058&layer=WIKIMEDIA"
-                        width="100%"
-                        height="400"
-                        frameborder="0"
-                        scrolling="no">
-                    </iframe>
+                    <div id="map"></div>
                     <div class="map-controls">
                         <button class="map-btn" onclick="zoomIn()" title="Zoom In">
                             <i class="fas fa-plus"></i>
@@ -466,6 +545,9 @@
                     <button class="contact-btn" onclick="openMap()">
                         <i class="fas fa-map-marked-alt"></i> View Full Map
                     </button>
+                    <button class="contact-btn" onclick="toggleDirections()">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </button>
                 </div>
             </div>
         </div>
@@ -476,18 +558,84 @@
     </div>
     
     <div class="toast" id="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Initialize map
+        const map = L.map('map').setView([25.2048, 55.2708], 15);
+        
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Add marker for the restaurant
+        const restaurantMarker = L.marker([25.2048, 55.2708]).addTo(map)
+            .bindPopup('<b>Crispy Chicken Al Regga</b><br>AReega area, Dubai')
+            .openPopup();
+        
+        // Add delivery zones
+        const zone1Circle = L.circle([25.2048, 55.2708], {
+            color: '#4caf50',
+            fillColor: '#4caf50',
+            fillOpacity: 0.2,
+            radius: 2000
+        }).addTo(map);
+        
+        const zone2Circle = L.circle([25.2048, 55.2708], {
+            color: '#2196f3',
+            fillColor: '#2196f3',
+            fillOpacity: 0.15,
+            radius: 5000
+        }).addTo(map);
+        
+        const zone3Circle = L.circle([25.2048, 55.2708], {
+            color: '#ff9800',
+            fillColor: '#ff9800',
+            fillOpacity: 0.1,
+            radius: 10000
+        }).addTo(map);
+        
+        const zone4Circle = L.circle([25.2048, 55.2708], {
+            color: '#f44336',
+            fillColor: '#f44336',
+            fillOpacity: 0.05,
+            radius: 15000
+        }).addTo(map);
+        
+        // Map controls
+        function zoomIn() {
+            map.zoomIn();
+            showToast('Zooming in...');
+        }
+        
+        function zoomOut() {
+            map.zoomOut();
+            showToast('Zooming out...');
+        }
+        
+        function resetMap() {
+            map.setView([25.2048, 55.2708], 15);
+            showToast('Map view reset');
+        }
+        
+        function toggleFullscreen() {
+            const mapContainer = document.querySelector('.map-container');
+            if (!document.fullscreenElement) {
+                mapContainer.requestFullscreen().then(() => {
+                    showToast('Entered fullscreen mode');
+                    map.invalidateSize();
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    showToast('Exited fullscreen mode');
+                    map.invalidateSize();
+                });
+            }
+        }
+        
+        // Directions functionality
         let selectedTransportMode = 'driving';
-        
-        function callManager() {
-            window.open('tel:+971567405572', '_self');
-            showToast('Calling Mr. Zaid...');
-        }
-        
-        function openMap() {
-            window.open('https://www.openstreetmap.org/#map=16/25.2050/55.2745', '_blank');
-            showToast('Opening full map view...');
-        }
         
         function toggleDirections() {
             const panel = document.getElementById('directionsPanel');
@@ -502,6 +650,14 @@
                             const { latitude, longitude } = position.coords;
                             document.getElementById('startLocation').value = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
                             showToast('Your location detected automatically');
+                            
+                            // Add marker for user location
+                            if (window.userMarker) {
+                                map.removeLayer(window.userMarker);
+                            }
+                            window.userMarker = L.marker([latitude, longitude]).addTo(map)
+                                .bindPopup('Your Location')
+                                .openPopup();
                         },
                         error => {
                             showToast('Unable to detect your location. Please enter manually.');
@@ -528,7 +684,7 @@
         
         // Transport mode selection
         document.querySelectorAll('.transport-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 document.querySelectorAll('.transport-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 selectedTransportMode = this.dataset.mode;
@@ -536,30 +692,43 @@
             });
         });
         
-        // Map controls
-        function zoomIn() {
-            showToast('Zooming in...');
-        }
-        
-        function zoomOut() {
-            showToast('Zooming out...');
-        }
-        
-        function resetMap() {
-            showToast('Map view reset');
-        }
-        
-        function toggleFullscreen() {
-            const mapContainer = document.querySelector('.map-container');
-            if (!document.fullscreenElement) {
-                mapContainer.requestFullscreen().then(() => {
-                    showToast('Entered fullscreen mode');
-                });
+        // Toggle delivery zones
+        function toggleZones() {
+            const content = document.getElementById('zoneContent');
+            content.classList.toggle('active');
+            
+            const icon = document.querySelector('.zone-header i');
+            if (content.classList.contains('active')) {
+                icon.className = 'fas fa-chevron-up';
             } else {
-                document.exitFullscreen().then(() => {
-                    showToast('Exited fullscreen mode');
-                });
+                icon.className = 'fas fa-chevron-down';
             }
+        }
+        
+        // Contact functions
+        function callManager() {
+            window.open('tel:+971567405572', '_self');
+            showToast('Calling Mr. Zaid...');
+        }
+        
+        function callCenter() {
+            window.open('tel:600527488', '_self');
+            showToast('Calling Call Center...');
+        }
+        
+        function callMobile() {
+            window.open('tel:0501882206', '_self');
+            showToast('Calling Mobile...');
+        }
+        
+        function sendEmail() {
+            window.open('mailto:kenawe@crispychicken.rest', '_self');
+            showToast('Opening email client...');
+        }
+        
+        function openMap() {
+            window.open('https://maps.app.goo.gl/rfpWM5nrFTkxZMiX6?g_st=iw', '_blank');
+            showToast('Opening full map view...');
         }
         
         // Toast notification
@@ -572,23 +741,6 @@
                 toast.classList.remove('show');
             }, 3000);
         }
-        
-        // Add smooth scrolling for better UX
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
     </script>
 </body>
 </html>
-
-The fixes I've made:
-
-1. **Fixed the logo issue**: Added a proper image tag with a placeholder URL that will display a cartoon chef logo
-2. **Updated the copyright year**: Changed "© 2023" to "© 2025" in the footer
-
-The logo is now displayed correctly in the header, and the copyright information has been updated as requested.
